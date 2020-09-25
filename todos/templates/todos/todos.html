@@ -1,0 +1,51 @@
+{% extends 'todos/base.html' %}
+{% block todolist %}
+    <h3 class="text-center mb-3">To Do list</h3>
+    {% if todos %}
+    <div class="accordion" id="accordionExample">
+        {% for todo in todos %}
+        <div class="card">
+          <div class="card-header d-flex align-items-center" id="heading{{todo.id}}">
+            <h2 class="">
+              <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse{{todo.id}}" aria-expanded="false" aria-controls="collapse{{todo.id}}">
+                {{ todo.todo_title}}
+              </button>
+            </h2>
+            <div><span>{{ todo.todo_date }}</span></div>
+          </div>
+      
+          <div id="collapse{{todo.id}}" class="collapse" aria-labelledby="heading{{todo.id}}" data-parent="#accordionExample">
+            <div class="card-body">
+              <div class="row">{{ todo.todo_text}}</div>
+              <div class="text-center mt-5">
+                  <form action="{% url 'todos:delete' todo.id %}" method="post" class="d-flex align-items-center justify-content-right">
+                    {% csrf_token %}  
+                    <input type="checkbox" name="completed" id="check{{todo.id}}" class="">
+                    <button type="submit" class="btn btn-secondary ml-3">Finish</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center">No To Do, enjoy daddy</div>
+    {% endif %}
+{% endblock %}
+
+{% block addtodo %} 
+    <h3 class="text-center mb-3">Add a new To Do</h3>
+    <div class="container">
+        <form action="{% url 'todos:new' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group text-center">
+                <input type="text" class="form-control" placeholder="Title" name="title">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Task" name="task">
+            </div>
+            <div class="text-center"><button type='submit' class="btn btn-secondary">Submit</button></div>
+        </form>
+    </div>
+{% endblock %}
